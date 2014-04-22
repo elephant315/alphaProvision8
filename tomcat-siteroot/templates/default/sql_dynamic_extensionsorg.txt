@@ -1,0 +1,11 @@
+CREATE TABLE `extensionsorg_*orgid*` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) DEFAULT NULL,
+  `secondname` varchar(30) DEFAULT NULL,
+  `extension` varchar(30) DEFAULT NULL,
+  `cabin` varchar(30) DEFAULT NULL,
+  `groups` varchar(255) DEFAULT NULL,
+  `branchid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

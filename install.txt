@@ -1,0 +1,162 @@
+Quick Start Guide
+----------------------------------
+Tomcat6/7, Asterisk18(odbc support), MySQL5.1 
+Phyton basic support, Odbc для mysql,MySQL-python
+
+apt-get update
+apt-get install tomcat7 asterisk mysql-server
+apt-get install unixODBC unixODBC-dev
+apt-get install libmyodbc libmysqlclient-dev 
+apt-get install asterisk-mysql asterisk-core-sounds-en
+apt-get install python-mysqldb python-daemon
+
+
+
+----------------------------------
+Установка
+----------------------------------
+- скопировать код программы в tomcat root (/var/lib/tomcat7/webapps/ROOT) 
+- создать сим линк /siteroot на сайт (ln -s /var/lib/tomcat7/webapps/ROOT /siteroot)
+- добавить urlrewriter в tomcat7/conf/web.xml в секцию <filter>
+ пример:
+  <filter>
+     <filter-name>UrlRewriteFilter</filter-name>
+     <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+  </filter>
+  <filter-mapping>
+     <filter-name>UrlRewriteFilter</filter-name>
+     <url-pattern>/*</url-pattern>
+     <dispatcher>REQUEST</dispatcher>
+     <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+  
+- выполнить /etc/init.d/tomcat7 restart
+
+- если несколько IP адресов на сервере, указать один в webroot/work/default.jsp
+- создать базу mysql (UTF-8) из скриптов dump-base.sql и dump-params.sql, добавить пользователя базы данных.
+  пример:
+	 mysql -p -e "create database isoft_config"
+	 mysql -p isoft_config < mysql-dump/dump-base.sql
+	 mysql -p isoft_config < mysql-dump/dump-params.sql
+
+- в папке tomcat-siteroot редактировать логин и пароль <sql:datasource>
+  для упрощения процедуры используйте массовую замену в папке siteroot/ :
+   find ./ -type f -exec sed -i -e 's/\*user\*/USERNAME_HERE/g' {} \;
+   find ./ -type f -exec sed -i -e 's/\*pwd\*/PASSWORD_HERE/g' {} \;
+
+- добавить пользователя tomcat в группу asterisk
+  usermod -a -G asterisk tomcat7
+  
+- добавить пользователя asterisk в группу tomcat7
+  usermod -a -G tomcat7 asterisk
+   
+- дать права пользователю tomcat7 на исполнение под sudo без пароля следующих сервисов /etc/init.d/asterisk, tomcat6, proxyman (не рекомендуется)
+- разрешить пользователю tomcat7 читать и редактировать файл /etc/asterisk/sip_isoft.conf
+
+- настроить в астериске AMI
+   пример настройки AMI: /etc/asterisk/manager.conf 
+	 [eventmonitor]
+	 secret = *pwd*
+	 read = system,call,log,verbose,command,agent,user
+	 write = system,call,log,verbose,command,agent,user
+- редактировать логины и пароли доступа к AMI Asterisk и Mysql в provision-proxy.py
+- скопировать python-proxy/provision-proxy.py в папку /opt/ и дать права на исполнение	 
+- добавить запуск provision-proxy.py  в /etc/rc.local (скрипт демонизирует самостоятельно)
+
+
+- скопировать asterisk-conf/extensions_isoft.conf в папку астериска и добавить import в файл extensions.conf
+     echo '#include extensions_isoft.conf' >> /etc/asterisk/extensions.conf
+	 echo '#include sip_isoft.conf' >> /etc/asterisk/sip.conf 
+	 echo ';do not edit' >> /etc/asterisk/sip_isoft.conf 
+ 
+
+- скопировать asterisk-conf/odbc_func.conf,asterisk-conf/res_odbc.conf в папку астериска. asterisk-conf/odbc.ini в папку /etc. 
+   настраиваем odbc соединение asterisk -> isoft_config:
+   
+   для этого указываем логины и пароли к mysql в файлах: odbc.ini, res_odbc.conf 
+   создаем /etc/odbcinst.ini если его нет, со следующим содержанием:
+   [MySQL]
+   Description = ODBC for MySQL
+   Driver = [path-to]/libmyodbc.so 
+   Setup = [path-to]/libodbcmyS.so 
+   FileUsage = 1
+
+
+- скопировать файлы звука asterisk-sounds/*.gsm в папку для звуковых приветствий asterisk
+
+- /etc/init.d/asterisk restart
+
+Установка закончена!
+
+----------------------------------
+Проверка установки
+----------------------------------
+для проверки ODBC выполним: odbcinst -q -d 
+положительный результат:[MySQL]
+
+для проверки соединения provision-proxy.py с астериск нужно зайти в консоль астериска
+(asterisk -rvvv) и выполнить комманду: manager show connected
+положительный результат:
+--
+	 Username         IP Address       Start       Elapsed     FileDes   HttpCnt   Read   Write
+	   eventmonitor     127.0.0.1        1398185226  26          23        0         00127  00127
+	 1 users connected.
+--	 
+
+Для проверки связи между астериском и БД, выполните следущую команду в консоли астериск:odbc show asterisk
+положительный результат:  
+	  Name:   asterisk
+	  DSN:    asterisk-connector
+	    Last connection attempt: 1969-12-31 19:00:00
+	  Pooled: Yes
+	  Limit:  30
+	  Connections in use: 1
+	    - Connection 1: connected
+
+	 
+----------------------------------
+Начальная настройка портала
+----------------------------------
+	Зайдите на портал по адресу: http://serverurl:8080/util/orgs.jsp?superpwd=superpwd
+   
+   * superpwd можно поменять в файле util/__app.jsp
+   * создавайте не больше одной организации
+   * активационные номера формата _XXXXXXXX (8 цифр) если астериск используется как рабочий, не допускайте конфликта с другими диалпланами 
+   
+   
+	Кликните orgs - для создания новой организации
+	Затем в разделе users кликните add new user, укажите level более или равным 101
+	Последний шаг, добавьте МАС адреса телефонов в разделе import dev - add new devices (пример файла:csv_sample/new_devices.csv)
+
+	Папка util может быть удалена или перемещена в другое место.
+	
+	
+	
+----------------------------------
+Alpha provision
+----------------------------------
+
+управление доступно по адресу http://serverurl:8080/mnge
+для загрузки списков офисов и абонентов используйте шаблоны: 
+csv_sample/new_branches.csv, csv_sample/new_extensions.csv
+
+телефонная книга и управление для филиалов доступно по адресу http://serverurl:8080/
+
+ 
+----------------------------------
+Дополнительная информация
+----------------------------------
+
+Пример настройки DHCP
+dnsmasq.conf
+ interface=eth1
+ dhcp-host=00:15:65:*:*:*,set:yealink-phones
+ dhcp-range=tag:yealink-phones,192.168.80.10,192.168.80.240,24h
+ dhcp-option=tag:yealink-phones,66,"http://serverip:8080"
+ dhcp-option=tag:yealink-phones,3,192.168.80.1
+ 
+	 
+Рекомендуем настроить apache+tomcat, не использовать root.
+
+В папке openwrt-syncman находятся скрипты для синхронизации и передачи информации о состоянии сервера в Alpha provision (установка в crontab)
+Скрипты написаны для OpenWRT-Atheros, хотя их можно использовать и на других платформах. 

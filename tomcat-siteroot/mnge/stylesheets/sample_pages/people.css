@@ -1,0 +1,50 @@
+/* -------------------------------------------------------------- 
+   People Page
+-------------------------------------------------------------- */		
+.department { float: left; margin-bottom: 0em; }
+.department h2 { font-size: 18px; color: #F90; border-bottom: 1px dotted #CCC; padding-bottom: 4px; margin-bottom: 1em; }
+.user-card { width: 45%; font-size: 12px; margin: 0 4.5% 1.5em 0; float: left; }
+.user-card-long { width: 100%; font-size: 12px; margin: 0 4.5% 1.5em 0; float: left; }
+.user-cardtrue { width: 100%; font-size: 12px; margin: 0 4.5% 1.5em 0; float: left; }
+.user-card img 
+{ 
+	border: 1px solid #CCC; 
+	padding: 1px; 			
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	border-radius: 4px;
+	
+}
+
+.user-cardtrue img 
+{ 
+	border: 1px solid #CCC; 
+	padding: 1px; 			
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	border-radius: 4px;
+	
+}
+
+.user-card-long img 
+{ 
+	border: 1px solid #CCC; 
+	padding: 1px; 			
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	border-radius: 4px;
+	
+}
+.user-card .avatar { width: 48px; display: table-cell; vertical-align: top; padding-right: 15px; position: relative; top: 5px; }
+.user-card .details { width: auto; display: table-cell; vertical-align: top; }
+.user-cardtrue .avatar { width: 48px; display: table-cell; vertical-align: top; padding-right: 15px; position: relative; top: 5px; }
+.user-cardtrue .details { width: auto; display: table-cell; vertical-align: top; }
+.user-card-long .avatar { width: 48px; display: table-cell; vertical-align: top; padding-right: 15px; position: relative; top: 5px; }
+.user-card-long .details { width: 450px; display: table-cell; vertical-align: top; }
+
+
+@media all and (max-width: 767px) and (min-width: 1px) {
+	.user-card { width: 45%; };
+	.user-cardtrue { width: 45%; };
+	.user-card-long { width: 45%; }
+}

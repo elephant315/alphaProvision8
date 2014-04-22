@@ -1,0 +1,9 @@
+CREATE TABLE `extensionparams_*orgid*` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paramid` int(11) DEFAULT NULL,
+  `paramvalue` varchar(50) DEFAULT NULL,
+  `extenid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+

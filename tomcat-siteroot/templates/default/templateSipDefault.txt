@@ -1,0 +1,10 @@
+[*extension*]
+fullname     = *extension*
+defaultuser  = *extension*
+secret       = *secret*
+hassip       = yes
+hasvoicemail = no
+host         = dynamic
+type         = friend
+context      = provision_context
+qualify      = no

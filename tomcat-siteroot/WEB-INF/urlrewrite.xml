@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+
+<urlrewrite>
+    <rule>
+        <from>^/preprovision/([0-9A-Za-z]+).cfg$</from>
+        <to>/work/preprovision.jsp?mac=$1</to>
+    </rule>
+    <rule>
+        <from>^/([0-9A-Za-z]+).cfg$</from>
+        <to>/work/provision.jsp?mac=$1</to>
+    </rule>
+	<rule>
+        <from>^/([0-9A-Za-z]+).config$</from>
+        <to>/work/configdown.jsp?device=$1</to>
+    </rule>
+	<rule>
+        <from>^/([0-9A-Za-z]+).cdr$</from>
+        <to>/work/cdr.jsp?device=$1</to>
+    </rule>
+	<rule>
+	    <from>^/$</from>
+	    <to type="redirect">/people/index.jsp</to>
+	</rule>
+	<rule>
+	    <from>^/mnge/$</from>
+	    <to type="redirect">/mnge/dashboard.jsp</to>
+	</rule>
+	<rule>
+	    <from>^/util/$</from>
+	    <to type="redirect">/util/orgs.jsp?action=view</to>
+	</rule>
+</urlrewrite>
+

@@ -1,0 +1,22 @@
+CREATE TABLE `branchesorg_*orgid*` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `addr` varchar(255) DEFAULT NULL,
+  `techperson` varchar(30) DEFAULT NULL,
+  `techtel` varchar(20) DEFAULT NULL,
+  `aeskey` varchar(20) DEFAULT NULL,
+  `mapxy` varchar(20) DEFAULT NULL,
+  `lastip` VARCHAR (20)  DEFAULT NULL,
+  `lasttime` DATETIME  DEFAULT NULL,
+  `customsip` TEXT  DEFAULT NULL,
+  `dialplan1` TEXT  DEFAULT NULL,
+  `dialplan2` TEXT  DEFAULT NULL,
+  `hwstatus` varchar(255) DEFAULT NULL,
+  `mnglogin` varchar(255) DEFAULT NULL,
+  `mngpwd` varchar(255) DEFAULT NULL,
+  `updinterval` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
